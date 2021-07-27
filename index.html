@@ -2,18 +2,35 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-
-    <style>
-      * {
-        font-size: 115%;
-      }
-    </style>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Thingspeak Data entry</title>
+    <!-- MDB icon -->
+    <link rel="icon" href="/static/img/mdb-favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
+    />
+    <!-- Google Fonts Roboto -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+    />
+    <!-- MDB -->
+    <link rel="stylesheet" href="/css/mdb.min.css" />
   </head>
 
   <body>
+    <div class="container">
+      <div class="form-outline">
+        <input type="text" id="form1" class="form-control" />
+        <label class="form-label" for="form1">Example label</label>
+      </div>
+    </div>
     <div>
       <div>
         <label for="apiKey">API Key : </label>
@@ -45,6 +62,10 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- MDB -->
+    <script type="text/javascript" src="/js/mdb.min.js"></script>
+
     <script>
       let count = 0;
       let h_api = "NNP6GFTB0BLYQ8XY";
@@ -73,7 +94,7 @@
         console.log(`t = ${t}`);
 
         $.get(
-          `https://api.thingspeak.com/update?api_key=${123}&field1=${b}&field2=${t}`,
+          `https://api.thingspeak.com/update?api_key=${h_api}&field1=${b}&field2=${t}`,
           (resp) => console.log(`resp = ${resp}`)
         );
         count++;
