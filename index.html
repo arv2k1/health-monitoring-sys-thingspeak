@@ -25,42 +25,52 @@
   </head>
 
   <body>
-    <div class="container">
-      <div class="form-outline">
-        <input type="text" id="form1" class="form-control" />
-        <label class="form-label" for="form1">Example label</label>
+    <div class="container p-5">
+      <h2 class="mb-3">Thingspeak data entry</h2>
+      <h5 class="mb-3">API</h5>
+      <div class="form-outline mb-3">
+        <input type="text" id="apiKey" class="form-control" />
+        <label class="form-label" for="apiKey">API Key</label>
+      </div>
+      <h5 class="mb-3">Beats per minute</h5>
+      <div class="form-outline mb-3">
+        <input type="number" id="bMin" class="form-control col-6" step="0.01" />
+        <label class="form-label" for="bMin">Minimum</label>
+      </div>
+      <div class="form-outline mb-3">
+        <input type="number" id="bMax" class="form-control col-6" step="0.01" />
+        <label class="form-label" for="bMax">Maximum</label>
+      </div>
+      <h5 class="mb-3">Temperature</h5>
+      <div class="form-outline mb-3">
+        <input type="number" id="tMin" class="form-control" step="0.01" />
+        <label class="form-label" for="tMin">Minimum</label>
+      </div>
+      <div class="form-outline mb-3">
+        <input type="number" id="tMax" class="form-control" step="0.01" />
+        <label class="form-label" for="tMax">Maximum</label>
+      </div>
+      <h5 class="mb-3">Auto pilot</h5>
+      <div class="form-outline mb-3">
+        <input type="number" id="cnt" class="form-control" />
+        <label class="form-label" for="cnt">Count</label>
+      </div>
+      <div class="form-outline mb-3">
+        <input type="number" id="interval" class="form-control" />
+        <label class="form-label" for="interval">Time interval</label>
+      </div>
+      <div class="d-flex justify-content-evenly">
+        <button type="button" class="btn btn-primary" onclick="start()">
+          Start
+        </button>
+        <button type="button" class="btn btn-primary" onclick="start()">
+          Cancel
+        </button>
       </div>
     </div>
-    <div>
-      <div>
-        <label for="apiKey">API Key : </label>
-        <input type="text" id="apiKey" />
-      </div>
-      <div>
-        <label for="bMin">BPM Minimum : </label>
-        <input type="number" id="bMin" />
-      </div>
-      <div>
-        <label for="bMax">BPM Maximum : </label>
-        <input type="number" id="bMax" />
-      </div>
-      <div>
-        <label for="tMin">Temp Minimum : </label>
-        <input type="number" id="tMin" />
-      </div>
-      <div>
-        <label for="tMax">Temp Maximum : </label>
-        <input type="number" id="tMax" />
-      </div>
-      <div>
-        <label for="cnt">Count : </label>
-        <input type="number" id="cnt" />
-      </div>
-      <div>
-        <button onclick="start()">Start</button>
-      </div>
-    </div>
+    <!-- Container end -->
 
+    <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!-- MDB -->
@@ -74,9 +84,13 @@
         $("#apiKey").val("RZNBV6XR0BOK4ZEP");
         $("#bMin").val(68);
         $("#bMax").val(80);
-        $("#tMin").val(92);
-        $("#tMax").val(105);
+        $("#tMin").val(97);
+        $("#tMax").val(99);
         $("#cnt").val(20);
+
+        document.querySelectorAll(".form-outline").forEach((formOutline) => {
+          new mdb.Input(formOutline).init();
+        });
       });
 
       const fire = () => {
