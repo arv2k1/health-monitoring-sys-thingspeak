@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      * {
+        font-size: 115%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div>
+      <div>
+        <label for="apiKey">API Key : </label>
+        <input type="text" id="apiKey" />
+      </div>
+      <div>
+        <label for="bMin">BPM Minimum : </label>
+        <input type="number" id="bMin" />
+      </div>
+      <div>
+        <label for="bMax">BPM Maximum : </label>
+        <input type="number" id="bMax" />
+      </div>
+      <div>
+        <label for="tMin">Temp Minimum : </label>
+        <input type="number" id="tMin" />
+      </div>
+      <div>
+        <label for="tMax">Temp Maximum : </label>
+        <input type="number" id="tMax" />
+      </div>
+      <div>
+        <label for="cnt">Count : </label>
+        <input type="number" id="cnt" />
+      </div>
+      <div>
+        <button onclick="start()">Start</button>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      let count = 0;
+      let h_api = "NNP6GFTB0BLYQ8XY";
+
+      $(() => {
+        $("#apiKey").val("RZNBV6XR0BOK4ZEP");
+        $("#bMin").val(68);
+        $("#bMax").val(80);
+        $("#tMin").val(92);
+        $("#tMax").val(105);
+        $("#cnt").val(20);
+      });
+
+      const fire = () => {
+        let p_api = $("#apiKey").val();
+        let bMin = $("#bMin").val();
+        let bMax = $("#bMax").val();
+        let tMin = $("#tMin").val();
+        let tMax = $("#tMax").val();
+        let cnt = $("#cnt").val();
+
+        let b = Math.round(parseInt(bMin + Math.random(1) * (bMax - bMin)));
+        let t = tMin + Math.random(1) * (tMax - tMin);
+        t = parseFloat(t).toFixed(2);
+        console.log(`b = ${b}`);
+        console.log(`t = ${t}`);
+
+        $.get(
+          `https://api.thingspeak.com/update?api_key=${123}&field1=${b}&field2=${t}`,
+          (resp) => console.log(`resp = ${resp}`)
+        );
+        count++;
+        console.log(`count = ${count}`);
+        if (count == cnt) {
+          clearInterval(id);
+        }
+      };
+
+      let id = window.setInterval(fire, 16 * 1000);
+      clearInterval(id);
+      const start = () => {
+        console.log("start");
+        id = window.setInterval(fire, 16 * 1000);
+      };
+    </script>
+  </body>
+</html>
