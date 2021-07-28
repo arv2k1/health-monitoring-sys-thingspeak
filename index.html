@@ -8,8 +8,6 @@
     />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>Thingspeak Data entry</title>
-    <!-- MDB icon -->
-    <link rel="icon" href="/static/img/mdb-favicon.ico" type="image/x-icon" />
     <!-- Font Awesome -->
     <link
       rel="stylesheet"
@@ -21,7 +19,18 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
     />
     <!-- MDB -->
-    <link rel="stylesheet" href="/css/mdb.min.css" />
+    <link rel="stylesheet" href="mdb.min.css" />
+
+    <style>
+      .message {
+        /* background-color: rgba(151, 196, 147, 0.548) !important; */
+        border: 1px solid rgba(126, 128, 126, 0.548);
+        border-radius: 0.5em;
+        padding: 5px;
+        font-weight: 300;
+        font-family: inherit;
+      }
+    </style>
   </head>
 
   <body>
@@ -55,15 +64,30 @@
         <input type="number" id="cnt" class="form-control" />
         <label class="form-label" for="cnt">Count</label>
       </div>
-      <div class="form-outline mb-3">
+      <div class="form-outline">
         <input type="number" id="interval" class="form-control" />
         <label class="form-label" for="interval">Time interval</label>
+      </div>
+      <div class="form-text mb-2">Enter a value above 15</div>
+      <div class="message mb-3">
+        <div class="mb-2"></div>
+        <p>
+          &nbsp; Remaing count &nbsp; &nbsp; &nbsp; &nbsp;:
+          <span id="remainingCount">-</span>
+        </p>
+        <p>&nbsp; Last entered BPM &nbsp; : <span id="lastBpm">-</span></p>
+        <p>&nbsp; Last entered Temp : <span id="lastTemp">-</span></p>
+        <p>
+          &nbsp; Message &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          &nbsp; :
+          <span id="message">-</span>
+        </p>
       </div>
       <div class="d-flex justify-content-evenly">
         <button type="button" class="btn btn-primary" onclick="start()">
           Start
         </button>
-        <button type="button" class="btn btn-primary" onclick="start()">
+        <button type="button" class="btn btn-primary" onclick="cancel()">
           Cancel
         </button>
       </div>
@@ -74,11 +98,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!-- MDB -->
-    <script type="text/javascript" src="/js/mdb.min.js"></script>
+    <script type="text/javascript" src="mdb.min.js"></script>
 
     <script>
       let count = 0;
-      let h_api = "NNP6GFTB0BLYQ8XY";
+      // let h_api = "NNP6GFTB0BLYQ8XY";
 
       $(() => {
         $("#apiKey").val("RZNBV6XR0BOK4ZEP");
@@ -87,6 +111,7 @@
         $("#tMin").val(97);
         $("#tMax").val(99);
         $("#cnt").val(20);
+        $("#interval").val(16);
 
         document.querySelectorAll(".form-outline").forEach((formOutline) => {
           new mdb.Input(formOutline).init();
@@ -95,11 +120,11 @@
 
       const fire = () => {
         let p_api = $("#apiKey").val();
-        let bMin = $("#bMin").val();
-        let bMax = $("#bMax").val();
-        let tMin = $("#tMin").val();
-        let tMax = $("#tMax").val();
-        let cnt = $("#cnt").val();
+        let bMin = parseFloat($("#bMin").val());
+        let bMax = parseFloat($("#bMax").val());
+        let tMin = parseFloat($("#tMin").val());
+        let tMax = parseFloat($("#tMax").val());
+        let cnt = parseInt($("#cnt").val());
 
         let b = Math.round(parseInt(bMin + Math.random(1) * (bMax - bMin)));
         let t = tMin + Math.random(1) * (tMax - tMin);
@@ -108,21 +133,37 @@
         console.log(`t = ${t}`);
 
         $.get(
-          `https://api.thingspeak.com/update?api_key=${h_api}&field1=${b}&field2=${t}`,
-          (resp) => console.log(`resp = ${resp}`)
+          `https://api.thingspeak.com/update?api_key=${p_api}&field1=${b}&field2=${t}`,
+          (resp) => {
+            console.log(`resp = ${resp}`);
+            $("#message").text(parseInt(resp) == 0 ? "FAILURE" : "SUCCESS");
+            $("#lastTemp").text(t);
+            $("#lastBpm").text(b);
+            let prev = $("#remainingCount").text();
+            prev = parseInt(prev);
+            let cur = prev - 1;
+            $("#remainingCount").text(cur);
+            console.log(cur);
+            if (cur == 0) {
+              clearInterval(id);
+              $("#message").text("FINISHED");
+            }
+          }
         );
-        count++;
-        console.log(`count = ${count}`);
-        if (count == cnt) {
-          clearInterval(id);
-        }
       };
 
-      let id = window.setInterval(fire, 16 * 1000);
+      let id = window.setInterval(fire, 1 * 1000);
       clearInterval(id);
       const start = () => {
+        $("#message").text("START");
         console.log("start");
-        id = window.setInterval(fire, 16 * 1000);
+        $("#remainingCount").text(parseInt($("#cnt").val()));
+        id = window.setInterval(fire, parseInt($("#interval").val()) * 1000);
+      };
+
+      const cancel = () => {
+        clearInterval(id);
+        $("#message").text("CANCELLED");
       };
     </script>
   </body>
